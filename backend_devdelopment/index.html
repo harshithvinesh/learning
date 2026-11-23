@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Backend Dev Arena - LeetCode for Real-World Backend Engineering</title>
+  <meta name="description" content="Master backend engineering through realistic real-world challenges based on the roadmap.sh Backend Developer roadmap.">
+  
+  <!-- Modern Google Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Top App Navigation Bar -->
+  <header class="app-header">
+    <div class="brand-section">
+      <div class="brand-logo">
+        <span>⚡</span> BACKEND ARENA
+      </div>
+      <span class="roadmap-source-tag">roadmap.sh Track</span>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs" aria-label="Main Navigation">
+      <button id="nav-roadmap-btn" class="nav-tab-btn" type="button">
+        <span>🗺️</span> Roadmap Journey
+      </button>
+      <button id="nav-arena-btn" class="nav-tab-btn active" type="button">
+        <span>💻</span> Problem Arena
+      </button>
+      <button id="nav-setup-btn" class="nav-tab-btn" type="button">
+        <span>🔌</span> Connect Backend
+      </button>
+    </nav>
+
+    <!-- Header Stats & Status -->
+    <div class="header-right">
+      <div class="stats-group">
+        <span id="stat-solved-badge" class="stat-badge highlight">0 / 0 Solved</span>
+        <span id="stat-streak-badge" class="stat-badge">🔥 1d Streak</span>
+      </div>
+
+      <!-- Backend Connection Status Pill -->
+      <span id="backend-status-pill" class="backend-pill pill-local" title="Click to configure backend server connection">
+        ⚡ In-Browser Mock
+      </span>
+
+      <!-- Settings Icon -->
+      <button id="btn-open-settings" class="icon-btn" title="Settings & Backend API Config" type="button">
+        ⚙️
+      </button>
+    </div>
+  </header>
+
+  <!-- Main View Container -->
+  <main class="main-view-container">
+
+    <!-- ====================================================================
+         VIEW 1: ROADMAP GRAPH VIEW
+         ==================================================================== -->
+    <section id="tab-roadmap-view" class="view-panel hidden" aria-label="Roadmap Progression">
+      <div class="roadmap-view-wrapper">
+        <div class="roadmap-hero">
+          <h1>Backend Developer Progression Roadmap</h1>
+          <p>Structured sequentially following the canonical <strong>roadmap.sh</strong> backend curriculum. Click any milestone to practice realistic real-world engineering scenarios.</p>
+        </div>
+
+        <!-- Render target for roadmap visualizer -->
+        <div id="roadmap-graph-root"></div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         VIEW 2: PROBLEM ARENA (LEETCODE FOR BACKEND)
+         ==================================================================== -->
+    <section id="tab-arena-view" class="view-panel arena-layout" aria-label="Coding Workspace">
+      
+      <!-- Left Sidebar: Problem Selector -->
+      <aside class="arena-sidebar">
+        <div class="sidebar-header">
+          <label for="category-filter-select" class="form-label" style="margin-bottom: 4px; display: block;">Roadmap Milestone:</label>
+          <select id="category-filter-select" class="category-select">
+            <option value="all">All Roadmap Milestones</option>
+          </select>
+        </div>
+        <div id="problem-list-container" class="problem-list">
+          <!-- Dynamically populated problem items -->
+        </div>
+      </aside>
+
+      <!-- Center Pane: Scenario, Requirements & Deep Dive -->
+      <article class="arena-description-pane">
+        <div class="problem-header">
+          <div class="problem-meta-badges">
+            <span id="problem-category-badge" class="category-badge-chip">Internet & HTTP</span>
+            <span id="problem-difficulty-badge" class="difficulty-pill diff-beginner">Beginner</span>
+          </div>
+          <h1 id="problem-title" class="problem-headline">Loading challenge...</h1>
+        </div>
+
+        <section class="problem-section">
+          <div class="section-label">🏢 Realistic Scenario</div>
+          <p id="problem-scenario" class="scenario-text"></p>
+        </section>
+
+        <section class="problem-section">
+          <div class="section-label">📋 Technical Requirements</div>
+          <ul id="problem-requirements-list" class="requirements-list"></ul>
+        </section>
+
+        <section class="problem-section">
+          <div class="section-label">💡 Architecture & Roadmap Concept</div>
+          <div id="problem-concept-expl" class="concept-callout"></div>
+        </section>
+
+        <!-- Progressive Hints & Solution Accordion -->
+        <div class="accordions-container">
+          <div id="hints-accordion"></div>
+          
+          <details id="solution-accordion">
+            <summary>👁️ Reveal Canonical Solution</summary>
+            <div class="solution-content">
+              <pre id="solution-code-block" class="code-snippet-box"></pre>
+            </div>
+          </details>
+        </div>
+      </article>
+
+      <!-- Right Pane: Code Editor & Test Console -->
+      <section class="arena-editor-pane">
+        <div class="editor-toolbar">
+          <div class="editor-lang-pill">
+            <span>⚡ JavaScript / Node Handler</span>
+          </div>
+
+          <div class="editor-actions">
+            <button id="btn-reset-code" class="text-btn" type="button" title="Reset to starter template">Reset Template</button>
+            <button id="btn-copy-code" class="text-btn" type="button" title="Copy code to clipboard">Copy</button>
+            <button id="btn-run-tests" class="primary-btn" type="button">
+              <span>▶</span> Run Solution
+            </button>
+          </div>
+        </div>
+
+        <!-- Code Editor Workspace -->
+        <div class="editor-workspace">
+          <div id="editor-line-numbers" class="editor-line-numbers" aria-hidden="true"></div>
+          <textarea id="code-editor" class="code-textarea" spellcheck="false" placeholder="Write your backend implementation here..."></textarea>
+        </div>
+
+        <!-- Bottom Console / Inspector -->
+        <div class="arena-console-container">
+          <div class="console-header-tabs">
+            <button id="tab-btn-tests" class="console-tab-btn active" type="button">Test Results</button>
+            <button id="tab-btn-logs" class="console-tab-btn" type="button">Console Logs</button>
+            <button id="tab-btn-db" class="console-tab-btn" type="button">Mock Database State</button>
+          </div>
+
+          <div id="test-results-panel" class="console-body-panel">
+            <!-- Test summary and test cards rendered here -->
+          </div>
+
+          <div id="console-logs-panel" class="console-body-panel hidden">
+            <!-- Captured console.log output -->
+          </div>
+
+          <div id="db-inspector-panel" class="console-body-panel hidden">
+            <!-- Inspected database state diffs -->
+          </div>
+        </div>
+      </section>
+
+    </section>
+
+    <!-- ====================================================================
+         VIEW 3: BACKEND SETUP & API INTEGRATION GUIDE
+         ==================================================================== -->
+    <section id="tab-setup-view" class="view-panel hidden" aria-label="Backend Connection Setup">
+      <div class="setup-view-wrapper">
+        <div class="setup-hero">
+          <h1>Connecting Your Real Backend Server</h1>
+          <p>This frontend application is built from the ground up with a decoupled service-oriented architecture. All data access, code submissions, and state persistence flow through <code>js/api-client.js</code>.</p>
+        </div>
+
+        <!-- Architecture Callout -->
+        <div class="setup-card">
+          <h2><span>🔌</span> Decoupled Architecture & Hook Points</h2>
+          <p>Currently, the app uses <strong>Local Browser Mode</strong> (in-memory execution with <code>localStorage</code> persistence). When you are ready to write server-side code (Express, FastAPI, Gin, etc.), simply point the app to your backend URL.</p>
+          
+          <table class="api-contract-table">
+            <thead>
+              <tr>
+                <th>Method</th>
+                <th>Endpoint</th>
+                <th>Description</th>
+                <th>Frontend Hook</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="method-tag method-get">GET</span></td>
+                <td><code>/api/health</code></td>
+                <td>Health check and ping indicator</td>
+                <td><code>apiClient.checkBackendHealth()</code></td>
+              </tr>
+              <tr>
+                <td><span class="method-tag method-get">GET</span></td>
+                <td><code>/api/curriculum/categories</code></td>
+                <td>Returns list of roadmap categories</td>
+                <td><code>apiClient.getCategories()</code></td>
+              </tr>
+              <tr>
+                <td><span class="method-tag method-get">GET</span></td>
+                <td><code>/api/curriculum/problems</code></td>
+                <td>Returns all problems or filtered by category</td>
+                <td><code>apiClient.getProblems(cat)</code></td>
+              </tr>
+              <tr>
+                <td><span class="method-tag method-get">GET</span></td>
+                <td><code>/api/curriculum/problems/:id</code></td>
+                <td>Returns specific challenge specifications</td>
+                <td><code>apiClient.getProblemById(id)</code></td>
+              </tr>
+              <tr>
+                <td><span class="method-tag method-get">GET</span></td>
+                <td><code>/api/user/progress</code></td>
+                <td>Fetches solved problem IDs and streak</td>
+                <td><code>apiClient.getUserProgress()</code></td>
+              </tr>
+              <tr>
+                <td><span class="method-tag method-put">PUT</span></td>
+                <td><code>/api/user/progress</code></td>
+                <td>Persists solved problems and user metrics</td>
+                <td><code>apiClient.saveUserProgress()</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Node.js Express Starter Template -->
+        <div class="setup-card">
+          <h2><span>🚀</span> Ready-To-Run Node.js / Express Backend (server.js)</h2>
+          <p>Copy this minimal starter into a folder, run <code>npm init -y && npm install express cors</code>, and start it with <code>node server.js</code> on port 4000:</p>
+          <pre class="code-snippet-box">const express = require('express');
+const cors = require('cors');
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+// In-memory or database progress store
+let userProgress = {
+  solvedProblemIds: [],
+  submissionsCount: 0,
+  streakDays: 1
+};
+
+// 1. Health check
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', serverTime: new Date().toISOString() });
+});
+
+// 2. User Progress
+app.get('/api/user/progress', (req, res) => {
+  res.json(userProgress);
+});
+
+app.put('/api/user/progress', (req, res) => {
+  userProgress = { ...userProgress, ...req.body };
+  res.json(userProgress);
+});
+
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => {
+  console.log(`Backend Dev Arena server running at http://localhost:${PORT}`);
+});</pre>
+        </div>
+
+        <!-- Python FastAPI Starter Template -->
+        <div class="setup-card">
+          <h2><span>🐍</span> Python FastAPI Alternative (main.py)</h2>
+          <p>If you prefer Python, install <code>pip install fastapi uvicorn</code> and run with <code>uvicorn main:app --port 4000 --reload</code>:</p>
+          <pre class="code-snippet-box">from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+from typing import List
+import datetime
+
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+progress_db = {
+    "solvedProblemIds": [],
+    "submissionsCount": 0,
+    "streakDays": 1
+}
+
+@app.get("/api/health")
+def health():
+    return {"status": "ok", "timestamp": datetime.datetime.utcnow().isoformat()}
+
+@app.get("/api/user/progress")
+def get_progress():
+    return progress_db
+
+@app.put("/api/user/progress")
+def update_progress(data: dict):
+    progress_db.update(data)
+    return progress_db</pre>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ====================================================================
+       SETTINGS & BACKEND CONFIGURATION MODAL
+       ==================================================================== -->
+  <div id="settings-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-settings-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modal-settings-title" class="modal-title">⚙️ Backend API & Storage Settings</h3>
+        <button id="btn-close-settings" class="icon-btn" type="button">✕</button>
+      </div>
+      <div class="modal-body">
+        <label class="form-checkbox-row">
+          <input type="checkbox" id="checkbox-use-remote">
+          <div>
+            <strong>Route API requests to remote backend</strong>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">When unchecked, uses local in-browser mock and localStorage</div>
+          </div>
+        </label>
+
+        <div class="form-group">
+          <label for="input-backend-url" class="form-label">Backend Server Base URL:</label>
+          <input type="text" id="input-backend-url" class="form-input" value="http://localhost:4000/api">
+        </div>
+
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <button id="btn-test-backend-health" class="text-btn" style="background: var(--bg-tertiary); padding: 6px 12px;" type="button">
+            Ping Server (GET /health)
+          </button>
+          <span id="backend-test-result" style="font-size: 0.8rem;"></span>
+        </div>
+
+        <hr style="border-color: var(--border-subtle); margin: 6px 0;">
+
+        <div class="form-group">
+          <label class="form-label">Reset Local Data:</label>
+          <button id="btn-reset-progress" class="text-btn" style="color: var(--danger); background: var(--danger-bg); width: fit-content; padding: 6px 12px;" type="button">
+            Reset All Solved Progress & Drafts
+          </button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <span style="font-size: 0.72rem; color: var(--text-muted);">Settings saved to browser localStorage</span>
+        <button id="btn-save-settings" class="primary-btn" type="button">Save Settings</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/curriculum-data.js"></script>
+  <script src="js/api-client.js"></script>
+  <script src="js/code-runner.js"></script>
+  <script src="js/roadmap-graph.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

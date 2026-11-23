@@ -1,0 +1,17 @@
+{
+  "name": "backend_devdelopment",
+  "version": "1.0.0",
+  "description": "A practical, self-contained interactive backend learning application modeled after **LeetCode**, but focused purely on **real-world backend engineering situations** (REST API design, idempotency, JWT stateless authentication, database transactions, solving N+1 queries, Redis cache-aside, rate limiters, circuit breakers, and message brokers).",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^5.2.1",
+    "uuid": "^11.1.1"
+  }
+}
